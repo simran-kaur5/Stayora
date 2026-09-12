@@ -2,7 +2,7 @@ body{
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     display: flex;
     flex-direction: column;
-    min-width: 100vh
+    min-height: 100vh
 }
 
 .container{
@@ -17,6 +17,10 @@ body{
 .fa-compass{
     color: #fe424d;
     font-size: 2rem;
+}
+
+footer {
+    margin-top: auto;
 }
 
 .nav-link{
@@ -82,11 +86,14 @@ body{
     background-color: #fe424d !important;
     border: none !important;
     width: 70px !important;
+    margin-bottom: 15px;
 }
 
 .edit-btn{
     background-color: #fe424d !important;
     border: none !important;
+    width: 70px !important;
+    margin-bottom: 15px;
 }
 
 .show-img{

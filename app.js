@@ -6,6 +6,8 @@ const Listing = require("./models/listings")
 const path = require("path")
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate")
+const wrapAsync = require("./utils/wrapAsync.js")
+const ExpressError = require("./utils/ExpressError.js")
 
 app.use(methodOverride("_method"));
 app.set("view engine","ejs")
@@ -30,36 +32,58 @@ app.get("/",(req,res)=>{
     res.send("got res")
 })
 
-app.get("/listings", async (req, res) => {
+app.get("/listings", wrapAsync(async (req, res) => {
     const listing = await Listing.find({});
     res.render("listings/index.ejs",{listing}) 
-})
+}))
 
 
 app.get("/listings/new",(req,res)=>{
     res.render("listings/create.ejs")
 })
 
-app.post("/listings",async(req,res)=>{
+app.post("/listings",wrapAsync(async(req,res,next)=>{
     let body = req.body
+    if(!body){
+        throw new ExpressError(400,"Send valid data for listing")
+    }
+    if(!body.title){
+        throw new ExpressError(400,"Title not got")
+    }
+    if(!body.description){
+        throw new ExpressError(400,"Description not got")
+    }
+    if(!body.price){
+        throw new ExpressError(400,"Price not got")
+    }
+    if(!body.country){
+        throw new ExpressError(400,"Country not got")
+    }
+    if(!body.location){
+        throw new ExpressError(400,"Location not got")
+    }
+    console.log(body)
     const list = new Listing(body)
     await list.save();
     res.redirect("/listings")
-})
+}))
 
-app.get("/listings/:id/edit",async (req,res)=>{
+app.get("/listings/:id/edit",wrapAsync(async (req,res)=>{
     let id = req.params.id
     let list = await Listing.findById(id)
     res.render("listings/edit.ejs",{list})
-})
+}))
 
-app.get("/listings/:id", async (req, res) => {
+app.get("/listings/:id", wrapAsync(async (req, res) => {
     let id = req.params.id
     const list = await Listing.findById(id)
     res.render("listings/show.ejs",{list})
-})
+}))
 
-app.patch("/listings/:id", async (req, res) => {
+app.patch("/listings/:id", wrapAsync(async (req, res) => {
+    if(!req.body){
+        throw new ExpressError(400,"Send valid data for listing")
+    }
     let id = req.params.id
     const newList = await Listing.updateOne({_id:id},{...req.body,
         image: {
@@ -67,28 +91,28 @@ app.patch("/listings/:id", async (req, res) => {
         }
         })
     res.redirect(`/listings/${id}`)
-})
+}))
 
-app.delete("/listings/:id/delete",async(req,res)=>{
+app.delete("/listings/:id/delete",wrapAsync(async(req,res)=>{
     let id = req.params.id
     const list = await Listing.findByIdAndDelete({_id:id})
     console.log(Listing.listSearchIndexes)
     res.redirect("/listings")
+}))
+
+// if no any route matches
+app.all("/*splat",(req,res,next)=>{
+    next(new ExpressError(404,"Page not Found!"))
 })
 
-// app.get("/testListings", async (req,res)=>{
-//     let sampleListing = new Listing({
-//         tirle:"My new villa",
-//         description:"by the beach",
-//         price:1200,
-//         location:"Goa",
-//         country:"india"
-//     })
-
-//     await sampleListing.save();
-//     console.log("sample saved")
-//     res.send("Sucess")
-// })
+// Error handler middleware
+app.use((err,req,res,next)=>{
+    let {statusCode=500,message="Something went wrong"} = err
+    console.log("error")
+    console.log(message)
+    res.status(statusCode).render("listings/errors.ejs",{message})
+    // res.status(statusCode).send(message)
+})
 
 
 app.listen(8080,()=>{
