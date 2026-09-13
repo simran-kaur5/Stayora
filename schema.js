@@ -16,5 +16,7 @@ const reviewSchema = joi.object({
         }).required()
 })
 
-module.exports = listingSchema
-module.exports = reviewSchema
+module.exports = {
+    listingSchema,
+    reviewSchema
+};

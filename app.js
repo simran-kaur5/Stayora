@@ -11,6 +11,8 @@ const ExpressError = require("./utils/ExpressError.js")
 const listingSchema  = require("./schema.js")
 const Review = require("./models/reviews.js")
 const reviewSchema  = require("./schema.js")
+const listings = require("./routes/listing.js") //router for listings
+const reviews = require("./routes/review.js") //router for reviews
 
 app.use(methodOverride("_method"));
 app.set("view engine","ejs")
@@ -35,95 +37,10 @@ app.get("/",(req,res)=>{
     res.send("got res")
 })
 
-const validateReview = (req,res,next)=>{
-    let body = req.body
-    let {error} = reviewSchema.validate(body)
-    if(error){
-        let errMessage = error.details.map((el)=> el.message).join(",")
-        throw new ExpressError(400,errMessage)
-    }else{
-        next()
-    }
-}
-const validateList = (req,res,next)=>{
-    let body = req.body
-    let {error} = listingSchema.validate(body)
-    if(error){
-        let errMessage = error.details.map((el)=> el.message).join(",")  // send extra details of error
-        throw new ExpressError(400,errMessage)
-    }else{
-        next()
-    }
-}
-app.get("/listings", wrapAsync(async (req, res) => {
-    const listing = await Listing.find({});
-    res.render("listings/index.ejs",{listing}) 
-}))
 
+app.use("/listings",listings)
 
-app.get("/listings/new",(req,res)=>{
-    res.render("listings/create.ejs")
-})
-
-app.post("/listings",validateList,
-    wrapAsync(async(req,res,next)=>{
-    const list = new Listing(body)
-    await list.save();
-    res.redirect("/listings")
-}))
-
-app.get("/listings/:id/edit",wrapAsync(async (req,res)=>{
-    let id = req.params.id
-    let list = await Listing.findById(id)
-    res.render("listings/edit.ejs",{list})
-}))
-
-app.get("/listings/:id", wrapAsync(async (req, res) => {
-    let id = req.params.id
-    const list = await Listing.findById(id).populate("reviews")
-    res.render("listings/show.ejs",{list})
-}))
-
-app.patch("/listings/:id",validateList,
-    wrapAsync(async (req, res) => {
-    let id = req.params.id
-    const newList = await Listing.updateOne({_id:id},{...req.body,
-        image: {
-            url: req.body.image
-        }
-        })
-    res.redirect(`/listings/${id}`)
-}))
-
-app.delete("/listings/:id/delete",wrapAsync(async(req,res)=>{
-    let id = req.params.id
-    const list = await Listing.findByIdAndDelete({_id:id})
-    res.redirect("/listings")
-}))
-
-// post req for reviews
-app.post("/listings/:id/reviews",validateReview, wrapAsync(async(req,res)=>{
-    let id = req.params.id
-    let newReview= new Review(req.body.review)
-    console.log(newReview)
-
-    const list = await Listing.findById(id)
-    list.reviews.push(newReview)
-
-    await newReview.save()
-    await list.save()
-    console.log("Reviews saved")
-    res.redirect(`/listings/${id}`)
-}))
-
-app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async(req,res)=>{
-    let {id, reviewId} = req.params
-
-    await Listing.findByIdAndUpdate(id, {$pull : {reviews: reviewId}})
-    await Review.findByIdAndDelete(reviewId)
-
-    res.redirect(`/listings/${id}`)
-}))
+app.use("/listings/:id/reviews",reviews)
 
 // if no any route matches
 app.all("/*splat",(req,res,next)=>{
