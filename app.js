@@ -116,6 +116,15 @@ app.post("/listings/:id/reviews",validateReview, wrapAsync(async(req,res)=>{
     res.redirect(`/listings/${id}`)
 }))
 
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async(req,res)=>{
+    let {id, reviewId} = req.params
+
+    await Listing.findByIdAndUpdate(id, {$pull : {reviews: reviewId}})
+    await Review.findByIdAndDelete(reviewId)
+
+    res.redirect(`/listings/${id}`)
+}))
+
 // if no any route matches
 app.all("/*splat",(req,res,next)=>{
     console.log("all")
