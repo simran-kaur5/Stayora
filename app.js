@@ -9,6 +9,8 @@ const ejsMate = require("ejs-mate")
 const wrapAsync = require("./utils/wrapAsync.js")
 const ExpressError = require("./utils/ExpressError.js")
 const listingSchema  = require("./schema.js")
+const Review = require("./models/reviews.js")
+const reviewSchema  = require("./schema.js")
 
 app.use(methodOverride("_method"));
 app.set("view engine","ejs")
@@ -33,6 +35,16 @@ app.get("/",(req,res)=>{
     res.send("got res")
 })
 
+const validateReview = (req,res,next)=>{
+    let body = req.body
+    let {error} = reviewSchema.validate(body)
+    if(error){
+        let errMessage = error.details.map((el)=> el.message).join(",")
+        throw new ExpressError(400,errMessage)
+    }else{
+        next()
+    }
+}
 const validateList = (req,res,next)=>{
     let body = req.body
     let {error} = listingSchema.validate(body)
@@ -68,7 +80,7 @@ app.get("/listings/:id/edit",wrapAsync(async (req,res)=>{
 
 app.get("/listings/:id", wrapAsync(async (req, res) => {
     let id = req.params.id
-    const list = await Listing.findById(id)
+    const list = await Listing.findById(id).populate("reviews")
     res.render("listings/show.ejs",{list})
 }))
 
@@ -87,6 +99,21 @@ app.delete("/listings/:id/delete",wrapAsync(async(req,res)=>{
     let id = req.params.id
     const list = await Listing.findByIdAndDelete({_id:id})
     res.redirect("/listings")
+}))
+
+// post req for reviews
+app.post("/listings/:id/reviews",validateReview, wrapAsync(async(req,res)=>{
+    let id = req.params.id
+    let newReview= new Review(req.body.review)
+    console.log(newReview)
+
+    const list = await Listing.findById(id)
+    list.reviews.push(newReview)
+
+    await newReview.save()
+    await list.save()
+    console.log("Reviews saved")
+    res.redirect(`/listings/${id}`)
 }))
 
 // if no any route matches
