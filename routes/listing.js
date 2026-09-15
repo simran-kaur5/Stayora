@@ -4,6 +4,7 @@ const {listingSchema}  = require("../schema.js")
 const wrapAsync = require("../utils/wrapAsync.js")
 const ExpressError = require("../utils/ExpressError.js")
 const Listing = require("../models/listings")
+const {isLoggedIn} = require("../middleware.js")
 
 const validateList = (req,res,next)=>{
     let body = req.body
@@ -23,19 +24,20 @@ router.get("/", wrapAsync(async (req, res) => {
 }))
 
 
-router.get("/new",(req,res)=>{
+router.get("/new",isLoggedIn,(req,res)=>{
     res.render("listings/create.ejs")
 })
 
 router.post("/",validateList,
+    isLoggedIn,
     wrapAsync(async(req,res,next)=>{
     const list = new Listing(req.body)
     await list.save();
     req.flash("success","Listing added successfully")
-    res.redirect("/listings")
+    res.redirect(req.session.redirectURL)
 }))
 
-router.get("/:id/edit",wrapAsync(async (req,res)=>{
+router.get("/:id/edit",isLoggedIn,wrapAsync(async (req,res)=>{
     let id = req.params.id
     let list = await Listing.findById(id)
 
@@ -56,7 +58,7 @@ router.get("/:id", wrapAsync(async (req, res) => {
     res.render("listings/show.ejs",{list})
 }))
 
-router.patch("/:id",validateList,
+router.patch("/:id",isLoggedIn,validateList,
     wrapAsync(async (req, res) => {
     let id = req.params.id
     const newList = await Listing.updateOne({_id:id},{...req.body,
@@ -68,7 +70,7 @@ router.patch("/:id",validateList,
     res.redirect(`/listings/${id}`)
 }))
 
-router.delete("/:id/delete",wrapAsync(async(req,res)=>{
+router.delete("/:id/delete",isLoggedIn,wrapAsync(async(req,res)=>{
     let id = req.params.id
     const list = await Listing.findByIdAndDelete({_id:id})
 
