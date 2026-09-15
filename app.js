@@ -10,10 +10,14 @@ const ExpressError = require("./utils/ExpressError.js")
 const listingSchema  = require("./schema.js")
 const Review = require("./models/reviews.js")
 const reviewSchema  = require("./schema.js")
-const listings = require("./routes/listing.js") //router for listings
-const reviews = require("./routes/review.js") //router for reviews
+const listingRouter = require("./routes/listing.js") //router for listings
+const reviewRouter = require("./routes/review.js") //router for reviews
+const userRouter = require("./routes/user.js") //router for reviews
 const sessions = require("express-session")
 const flash = require("connect-flash")
+const passport = require("passport")
+const LocalStrategy = require("passport-local")
+const User = require("./models/users")
 
 
 app.use(methodOverride("_method"));
@@ -48,11 +52,28 @@ app.get("/",(req,res)=>{
 app.use(sessions(sessionOptions))
 app.use(flash())
 
+app.use(passport.initialize())
+app.use(passport.session())
+passport.serializeUser(User.serializeUser())
+passport.deserializeUser(User.deserializeUser())
+passport.use(new LocalStrategy(User.authenticate()));
+
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
 
     next();
 });
+app.get("/demouser",async(req,res)=>{
+    let fakeUser = new User({
+        email:"mari",
+        username:"Simran"
+    })
+
+    let resl = await User.register(fakeUser,"helloword");
+    console.log(resl)
+    res.send(resl)
+})
 
 
 async function main() {
@@ -60,10 +81,10 @@ async function main() {
 }
 
 
+app.use("/listings",listingRouter)
 
-app.use("/listings",listings)
-
-app.use("/listings/:id/reviews",reviews)
+app.use("/listings/:id/reviews",reviewRouter)
+app.use("/",userRouter)
 
 // if no any route matches
 app.all("/*splat",(req,res,next)=>{

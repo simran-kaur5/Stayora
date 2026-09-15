@@ -38,12 +38,21 @@ router.post("/",validateList,
 router.get("/:id/edit",wrapAsync(async (req,res)=>{
     let id = req.params.id
     let list = await Listing.findById(id)
+
+    if(!list){
+        req.flash("error","This listing does not exist")
+        return res.redirect("/listings")
+    }
     res.render("listings/edit.ejs",{list})
 }))
 
 router.get("/:id", wrapAsync(async (req, res) => {
     let id = req.params.id
     const list = await Listing.findById(id).populate("reviews")
+    if(!list){
+        req.flash("error","This listing does not exist")
+        return res.redirect("/listings")
+    }
     res.render("listings/show.ejs",{list})
 }))
 
@@ -55,12 +64,15 @@ router.patch("/:id",validateList,
             url: req.body.image
         }
         })
+    req.flash("success","Listing Updated")
     res.redirect(`/listings/${id}`)
 }))
 
 router.delete("/:id/delete",wrapAsync(async(req,res)=>{
     let id = req.params.id
     const list = await Listing.findByIdAndDelete({_id:id})
+
+    req.flash("success","Listing got deleted")
     res.redirect("/listings")
 }))
 
