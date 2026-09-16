@@ -12,13 +12,17 @@ main().then((result)=>{
 })
 
 async function main() {
-    mongoose.connect('mongodb://127.0.0.1:27017/project');
+    await mongoose.connect('mongodb://127.0.0.1:27017/project');
 }
 
-
 async function insertion(){
-    Listing.deleteMany(),
-    Listing.insertMany(initialize.data)
+    await Listing.deleteMany();
+    const listings = initialize.data.map((obj) => ({
+    ...obj,
+    owner: "6aa93f93f209e698ffa0d322"
+}));
+
+    await Listing.insertMany(listings);
     console.log("Database initialized")
 }
 
