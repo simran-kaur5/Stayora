@@ -6,25 +6,28 @@ const {isLoggedIn,isOwner,validateList} = require("../middleware.js")
 const listingController = require("../controllers/listings.js")
 
 
-router.get("/", wrapAsync(listingController.index))
-
+router
+    .route("/") //helps us to right multiple http req for same path at one place 
+    .get(wrapAsync(listingController.index))
+    .post(
+        isLoggedIn,
+        validateList,
+    wrapAsync(listingController.createListings))
 
 router.get("/new",isLoggedIn,listingController.newForm)
 
-router.post("/",validateList,
-    isLoggedIn,
-    wrapAsync(listingController.createListings))
+router
+    .route("/:id")
+    .get(isLoggedIn, wrapAsync(listingController.showListings))
+    .patch(isLoggedIn, // check whether user is logged in
+    isOwner,//permission to edit
+    validateList,
+    wrapAsync(listingController.updateListings))
+    .delete(isLoggedIn,isOwner,wrapAsync(listingController.destroyListings))
+
 
 router.get("/:id/edit",
     isLoggedIn,isOwner,wrapAsync(listingController.renderEditForm))
 
-router.get("/:id",isLoggedIn, wrapAsync(listingController.showListings))
-
-router.patch("/:id",isLoggedIn, // check whether user is logged in
-    isOwner,//permission to edit
-    validateList,
-    wrapAsync(listingController.updateListings))
-
-router.delete("/:id/delete",isLoggedIn,isOwner,wrapAsync(listingController.destroyListings))
 
 module.exports = router
