@@ -3,78 +3,28 @@ const router = express.Router()
 const wrapAsync = require("../utils/wrapAsync.js")
 const Listing = require("../models/listings")
 const {isLoggedIn,isOwner,validateList} = require("../middleware.js")
+const listingController = require("../controllers/listings.js")
 
 
-router.get("/", wrapAsync(async (req, res) => {
-    const listing = await Listing.find({});
-    res.render("listings/index.ejs",{listing}) 
-}))
+router.get("/", wrapAsync(listingController.index))
 
 
-router.get("/new",isLoggedIn,(req,res)=>{
-    res.render("listings/create.ejs")
-})
+router.get("/new",isLoggedIn,listingController.newForm)
 
 router.post("/",validateList,
     isLoggedIn,
-    wrapAsync(async(req,res,next)=>{
-    const list = new Listing(req.body)
-    list.owner = req.user._id
-    await list.save();
-    req.flash("success","Listing added successfully")
-    res.redirect("/listings")
-}))
+    wrapAsync(listingController.createListings))
 
 router.get("/:id/edit",
-    isLoggedIn,isOwner,wrapAsync(async (req,res)=>{
-    let id = req.params.id
-    let list = await Listing.findById(id)
+    isLoggedIn,isOwner,wrapAsync(listingController.renderEditForm))
 
-    if(!list){
-        req.flash("error","This listing does not exist")
-        return res.redirect("/listings")
-    }
-    res.render("listings/edit.ejs",{list})
-}))
-
-router.get("/:id",isLoggedIn, wrapAsync(async (req, res) => {
-    let id = req.params.id
-    const list = await Listing.findById(id).populate({path:"reviews",populate:{
-        path: "author" // we want author name 
-        },
-    })
-    .populate("owner")
-    console.log(list)
-    console.log("Owner in " , list.owner._id)
-    console.log("CUrr",res.locals.currUser._id)
-    if(!list){
-        req.flash("error","This listing does not exist")
-        return res.redirect("/listings")
-    }
-    res.render("listings/show.ejs",{list})
-}))
+router.get("/:id",isLoggedIn, wrapAsync(listingController.showListings))
 
 router.patch("/:id",isLoggedIn, // check whether user is logged in
     isOwner,//permission to edit
     validateList,
-    wrapAsync(async (req, res) => {
-    let id = req.params.id
-    console.log(id)
-    const newList = await Listing.updateOne({_id:id},{...req.body,
-        image: {
-            url: req.body.image
-        }
-        })
-    req.flash("success","Listing Updated")
-    res.redirect(`/listings/${id}`)
-}))
+    wrapAsync(listingController.updateListings))
 
-router.delete("/:id/delete",isLoggedIn,isOwner,wrapAsync(async(req,res)=>{
-    let id = req.params.id
-    const list = await Listing.findByIdAndDelete({_id:id})
-
-    req.flash("success","Listing got deleted")
-    res.redirect("/listings")
-}))
+router.delete("/:id/delete",isLoggedIn,isOwner,wrapAsync(listingController.destroyListings))
 
 module.exports = router
