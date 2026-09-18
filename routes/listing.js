@@ -26,6 +26,7 @@ router
     .patch(isLoggedIn, // check whether user is logged in
     isOwner,//permission to edit
     validateList,
+    upload.single("image"),
     wrapAsync(listingController.updateListings))
     .delete(isLoggedIn,isOwner,wrapAsync(listingController.destroyListings))
 

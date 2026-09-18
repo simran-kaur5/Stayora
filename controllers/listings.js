@@ -16,13 +16,11 @@ module.exports.showListings = async (req, res) => {
         },
     })
     .populate("owner")
-    console.log(list)
-    console.log("Owner in " , list.owner._id)
-    console.log("CUrr",res.locals.currUser._id)
     if(!list){
         req.flash("error","This listing does not exist")
         return res.redirect("/listings")
     }
+    // console.log(list)
     res.render("listings/show.ejs",{list})
 }
 
@@ -46,17 +44,25 @@ module.exports.renderEditForm = async (req,res)=>{
         req.flash("error","This listing does not exist")
         return res.redirect("/listings")
     }
-    res.render("listings/edit.ejs",{list})
+    let OrgImageUrl = list.image.url
+    OrgImageUrl = OrgImageUrl.replace("/upload","/upload/h_300")
+    res.render("listings/edit.ejs",{list,OrgImageUrl})
 }
 
 module.exports.updateListings = async (req, res) => {
     let id = req.params.id
-    console.log(id)
-    const newList = await Listing.updateOne({_id:id},{...req.body,
-        image: {
-            url: req.body.image
-        }
-        })
+    // console.log(id)
+    const newList = await Listing.findByIdAndUpdate(id,{...req.body})
+    console.log(newList)
+
+    if(typeof req.file !== "undefined"){
+        let url = req.file.path
+        let filename = req.file.filename
+
+        newList.image = {url,filename}
+    }
+    console.log(newList.image)
+    await newList.save()
     req.flash("success","Listing Updated")
     res.redirect(`/listings/${id}`)
 }
