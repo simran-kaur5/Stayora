@@ -8,11 +8,8 @@ const listingSchema = new Schema({
         required:true,
     },
     image:{
-        filename: String,
-        url: {
-        type: String,
-        default: "https://images.unsplash.com/photo-1500534623283-312aade485b7"
-        },
+        url:String,
+        filename: String
     },
     description:String,
     price:Number,

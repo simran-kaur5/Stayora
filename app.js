@@ -1,3 +1,8 @@
+
+if(process.env.NODE_DEV != "production"){
+    require("dotenv").config()
+}
+
 const express = require("express")
 const mongoose = require("mongoose")
 
@@ -18,7 +23,8 @@ const flash = require("connect-flash")
 const passport = require("passport")
 const LocalStrategy = require("passport-local")
 const User = require("./models/users")
-
+const multer = require("multer") //to handle file uploaded
+const upload = multer({dest:"upload/"})
 
 app.use(methodOverride("_method"));
 app.set("view engine","ejs")

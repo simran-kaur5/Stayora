@@ -4,14 +4,18 @@ const wrapAsync = require("../utils/wrapAsync.js")
 const Listing = require("../models/listings")
 const {isLoggedIn,isOwner,validateList} = require("../middleware.js")
 const listingController = require("../controllers/listings.js")
+const multer = require("multer") //to undestand file encoded data
+const {storage} = require("../cloudConfig.js")
+const upload = multer({storage})
 
 
 router
     .route("/") //helps us to right multiple http req for same path at one place 
     .get(wrapAsync(listingController.index))
     .post(
-        isLoggedIn,
-        validateList,
+    isLoggedIn,
+    validateList,
+    upload.single("image"),
     wrapAsync(listingController.createListings))
 
 router.get("/new",isLoggedIn,listingController.newForm)
