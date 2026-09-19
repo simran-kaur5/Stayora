@@ -51,9 +51,9 @@ const sessionOptions = {
     }
 }
 
-app.get("/",(req,res)=>{
-    res.send("got res")
-})
+// app.get("/",(req,res)=>{
+//     res.send("got res")
+// })
 
 app.use(sessions(sessionOptions))
 app.use(flash())
@@ -94,7 +94,7 @@ app.use("/listings/:id/reviews",reviewRouter)
 app.use("/",userRouter)
 
 // if no any route matches
-app.all("/*splat",(req,res,next)=>{
+app.use((req,res,next)=>{
     console.log("all")
     next(new ExpressError(404,"Page not Found!"))
 })
