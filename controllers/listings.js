@@ -14,8 +14,6 @@ module.exports.index = async (req, res) => {
         const listing = await Listing.find({});
         res.render("listings/index.ejs",{listing}) 
     }
-
-    
 }
 
 module.exports.newForm = (req,res)=>{
