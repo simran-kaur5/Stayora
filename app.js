@@ -1,5 +1,5 @@
 
-if(process.env.NODE_DEV != "production"){
+if(process.env.NODE_ENV != "production"){
     require("dotenv").config()
 }
 
@@ -27,7 +27,7 @@ const User = require("./models/users")
 const multer = require("multer") //to handle file uploaded
 const upload = multer({dest:"upload/"})
 
-const dbUrl = process.env.ATLASDB
+const dbUrl = process.env.ATLASDB_URL
 
 app.use(methodOverride("_method"));
 app.set("view engine","ejs")
