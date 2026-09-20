@@ -68,7 +68,7 @@ const sessionOptions = {
 }
 
 app.get("/",(req,res)=>{
-    res.ṛedirect("/listings")
+    res.redirect("/listings")
 })
 
 app.use(sessions(sessionOptions))
