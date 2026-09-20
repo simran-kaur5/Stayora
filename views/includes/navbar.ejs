@@ -32,6 +32,33 @@
     font-size: 1rem;
     width: 280px; 
   } 
+
+  .menu-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.menu-icon span {
+    width: 20px;
+    height: 2px;
+    background: #333;
+    display: block;
+    transition: 0.2s;
+}
+
+.navbar-toggler[aria-expanded="true"] .menu-icon span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.navbar-toggler[aria-expanded="true"] .menu-icon span:nth-child(2) {
+    opacity: 0;
+}
+
+.navbar-toggler[aria-expanded="true"] .menu-icon span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+}
+
   .navbar-toggler {
     background-color: #fff !important;
     border: 1px solid #ddd !important;
@@ -75,6 +102,22 @@
         font-size: 1rem;
         margin-right: 0;
     }
+     .navbar-collapse {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 200px;
+        background: white;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .navbar-collapse .navbar-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
 }
 </style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
@@ -115,7 +158,11 @@
             aria-expanded="false"
             aria-label="Toggle navigation">
 
-            <span class="navbar-toggler-icon"></span>
+            <span class="menu-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+          </span>
         </button>
 
         <!-- RIGHT SIDE OPTIONS -->
