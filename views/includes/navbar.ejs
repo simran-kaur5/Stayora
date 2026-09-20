@@ -1,5 +1,14 @@
 
 <style> 
+  .container-fluid {
+      position: relative;
+  }
+  .search-form {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+  }
   .search-btn {
     background-color: #fe424d; 
     color: #ffffff; 
@@ -40,7 +49,8 @@
   @media (max-width: 767px) {
 
     .search-form {
-        display: flex;
+        position: static;
+        transform: none;
         margin-left: auto;
         margin-right: 0.5rem;
     }
@@ -66,7 +76,6 @@
         border-radius: 10px;
         margin-top: 0.5rem;
     }
-
 }
 
 
@@ -74,11 +83,19 @@
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
     <div class="container-fluid">
 
+        <!-- Logo -->
         <a class="navbar-brand" href="/listings">
             <i class="fa-solid fa-compass"></i>
         </a>
 
-        <!-- Search stays visible -->
+        <!-- Explore - ALWAYS VISIBLE -->
+        <div class="navbar-nav">
+            <a class="nav-link" href="/listings">
+                Explore
+            </a>
+        </div>
+
+        <!-- Search -->
         <form class="d-flex search-form" role="search">
             <input
                 class="form-control search-inp"
@@ -104,17 +121,9 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Menu -->
+        <!-- RIGHT SIDE OPTIONS -->
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 
-            <!-- LEFT SIDE -->
-            <div class="navbar-nav">
-                <a class="nav-link" href="/listings">
-                    Explore
-                </a>
-            </div>
-
-            <!-- RIGHT SIDE -->
             <div class="navbar-nav ms-auto text-end">
 
                 <a class="nav-link" href="/listings/new">
