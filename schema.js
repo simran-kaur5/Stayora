@@ -6,7 +6,8 @@ const listingSchema = joi.object({
         price: joi.number().required().min(0),
         image: joi.string().allow("",null),
         country: joi.string().required(),
-        location: joi.string().required()
+        location: joi.string().required(),
+        category: joi.string().valid("Trending","Iconic","Mountains","Rooms","Castles","Pools","Camping","Farms","Arctic","Domes","Boats").required()
 })
 
 const reviewSchema = joi.object({
