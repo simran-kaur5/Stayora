@@ -1,6 +1,23 @@
 <% layout("/layouts/boilerplate.ejs") %>
+
+<style>
+    @media (max-width: 767px) {
+        .new-listing-form {
+            width: 100%;
+        }
+
+        .new-listing-form h3 {
+            font-size: 1.5rem;
+        }
+
+        .add-btn {
+            width: 100%;
+        }
+    }
+</style>
+
     <div class="row mt-3">
-        <div class="col-8 offset-2">
+        <div class="col-8 offset-2 new-listing-form">
             <br><br>
     <h3>Create a new Listings</h3>
     

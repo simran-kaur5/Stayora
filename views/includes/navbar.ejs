@@ -23,71 +23,127 @@
     width: 280px; 
   } 
   .navbar-toggler {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 0.4rem 0.6rem;
-  }
-  .navbar-toggler:focus {
-    background-color: white;
-    box-shadow: none;
-  }
+    background-color: #fff !important;
+    border: 1px solid #ddd !important;
+    border-radius: 8px !important;
+    padding: 6px 10px !important;
+}
 
-  @media (max-width: 767px) { 
-    .navbar-nav { 
-    width: 100%; 
-    } 
-    .search-form { 
-    width: 100%; 
-    margin: 0.75rem 0; 
-    } 
-    .search-inp {
-    width: 100%;
-    padding: 0.5rem 1rem;
-    } 
-    .search-btn {
-    margin-left: 0.5rem; 
-    } 
-    .navbar-actions {
-    margin-top: 0.5rem;
-    } } 
-  @media (max-width: 400px) {
+.navbar-toggler:focus {
+    background-color: #fff !important;
+    box-shadow: none !important;
+}
+
+.navbar-toggler-icon {
+    background-color: #fff !important;
+}
+  @media (max-width: 767px) {
+
     .search-form {
-    flex-direction: column; 
-    gap: 0.5rem;
-    } 
-    .search-btn { 
-    width: 100%; margin-left: 0; 
-  } } 
+        display: flex;
+        margin-left: auto;
+        margin-right: 0.5rem;
+    }
+
+    .search-inp {
+        width: 140px;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .search-btn {
+        font-size: 0;
+        padding: 0.5rem 0.7rem;
+    }
+
+    .search-btn i {
+        font-size: 1rem;
+        margin-right: 0;
+    }
+
+    .navbar-collapse {
+        background-color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        margin-top: 0.5rem;
+    }
+
+}
+
+
 </style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass"></i></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link" href="/listings">Explore</a>
-      </div>
-      <div class="navbar-nav ms-auto">
-        <form class=" d-flex " role="search">
-        <input class="form-control mr-sm-2 search-inp" type="search" placeholder="Search destination">
-        <button class="btn search-btn" type="submit">
-          <i class="fa-solid fa-magnifying-glass"></i>Search</button>
-    </form>
-      </div>
-       <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="/listings/new">Airbnb your home</a>
-        <% if (!currUser) { %>
-              <a class="nav-link active" aria-current="page" href="/signup"><b>Sign Up</b></a>
-              <a class="nav-link" href="/login"><b>Login</b></a>
-        <% } %>
-        <% if(currUser) { %>
-              <a class="nav-link" href="/logout"><b>Logout</b></a>
-        <%}%>
-        
-      </div>
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="/listings">
+            <i class="fa-solid fa-compass"></i>
+        </a>
+
+        <!-- Search stays visible -->
+        <form class="d-flex search-form" role="search">
+            <input
+                class="form-control search-inp"
+                type="search"
+                placeholder="Search destination">
+
+            <button class="btn search-btn" type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Search
+            </button>
+        </form>
+
+        <!-- Hamburger -->
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Menu -->
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+            <!-- LEFT SIDE -->
+            <div class="navbar-nav">
+                <a class="nav-link" href="/listings">
+                    Explore
+                </a>
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div class="navbar-nav ms-auto text-end">
+
+                <a class="nav-link" href="/listings/new">
+                    Airbnb your home
+                </a>
+
+                <% if (!currUser) { %>
+
+                    <a class="nav-link" href="/signup">
+                        <b>Sign Up</b>
+                    </a>
+
+                    <a class="nav-link" href="/login">
+                        <b>Login</b>
+                    </a>
+
+                <% } %>
+
+                <% if(currUser) { %>
+
+                    <a class="nav-link" href="/logout">
+                        <b>Logout</b>
+                    </a>
+
+                <% } %>
+
+            </div>
+
+        </div>
+
     </div>
-  </div>
 </nav>
