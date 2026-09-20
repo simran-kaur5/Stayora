@@ -169,10 +169,6 @@ While building Stayora, I worked with:
 * Error handling
 * Deployment with Render
 
-## Screenshots
-
-*Add screenshots of the application here.*
-
 ## Future Improvements
 
 * Booking system
