@@ -1,5 +1,5 @@
 
-if(process.env.NODE_ENV != "production"){
+if(process.env.NODE_ENV !== "production"){
     require("dotenv").config()
 }
 
@@ -120,7 +120,7 @@ app.use((err,req,res,next)=>{
     // res.status(statusCode).send(message)
 })
 
-
-app.listen(8080,()=>{
+const PORT = process.env.PORT || 8080;
+app.listen(PORT,()=>{
     console.log("server listening")
 })
