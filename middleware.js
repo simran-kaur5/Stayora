@@ -30,7 +30,6 @@ module.exports.validateReview = (req,res,next)=>{
 module.exports.isLoggedIn = (req,res,next)=>{
     if(!req.isAuthenticated()){
         req.session.redirectURL = req.originalUrl
-        console.log(req.session.redirectURL)
         req.flash("error","Please Login")
         return res.redirect("/login")
     }

@@ -47,7 +47,6 @@ const listingSchema = new Schema({
 
 // when ever any listings will deleted its corresponding reviews will also be deleted
 listingSchema.post("findOneAndDelete",async (listing)=>{
-    console.log("del")
     if(listing){
         await Review.deleteMany({_id:{$in:listing.reviews}})
     }

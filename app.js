@@ -19,12 +19,15 @@ const listingRouter = require("./routes/listing.js") //router for listings
 const reviewRouter = require("./routes/review.js") //router for reviews
 const userRouter = require("./routes/user.js") //router for reviews
 const sessions = require("express-session")
+const MongoStore = require("connect-mongo").default
 const flash = require("connect-flash")
 const passport = require("passport")
 const LocalStrategy = require("passport-local")
 const User = require("./models/users")
 const multer = require("multer") //to handle file uploaded
 const upload = multer({dest:"upload/"})
+
+const dbUrl = process.env.ATLASDB
 
 app.use(methodOverride("_method"));
 app.set("view engine","ejs")
@@ -40,8 +43,21 @@ main().then((result)=>{
     console.log(err)
 })
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto:{
+        secret:process.env.SECRET
+    },
+    touchAfter:24*3600
+})
+
+store.on("error",()=>{
+    console.log("Error in store")
+})
+
 const sessionOptions = {
-    secret: "mysecretkey",
+    store,
+    secret: process.env.SECRET,
     resave:false,
     saveUninitialized:true,
     cookie:{
@@ -78,13 +94,12 @@ app.get("/demouser",async(req,res)=>{
     })
 
     let resl = await User.register(fakeUser,"helloword");
-    console.log(resl)
     res.send(resl)
 })
 
 
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/project');
+    await mongoose.connect(dbUrl);
 }
 
 
@@ -95,14 +110,12 @@ app.use("/",userRouter)
 
 // if no any route matches
 app.use((req,res,next)=>{
-    console.log("all")
     next(new ExpressError(404,"Page not Found!"))
 })
 
 // Error handler middleware
 app.use((err,req,res,next)=>{
     let {statusCode=500,message="Something went wrong"} = err
-    console.log("error handling middle ware",message)
     res.status(statusCode).render("listings/errors.ejs",{message})
     // res.status(statusCode).send(message)
 })

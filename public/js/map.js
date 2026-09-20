@@ -6,7 +6,6 @@ center: listing.geometry.coordinates, // starting position [lng, lat]. Note that
 zoom: 9 // starting zoom
 });
 
-console.log(listing.geometry)
 const marker = new mapboxgl.Marker({ color: 'red'})
     .setLngLat(listing.geometry.coordinates)
     .setPopup(new mapboxgl.Popup({offset:25}).setHTML(
