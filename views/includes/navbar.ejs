@@ -1,8 +1,9 @@
 
 <style> 
   .container-fluid {
-      position: relative;
-  }
+    position: relative;
+    flex-wrap: nowrap !important;
+}
   .search-form {
       position: absolute;
       left: 50%;
@@ -48,37 +49,33 @@
 }
   @media (max-width: 767px) {
 
+    .navbar-toggler {
+        flex-shrink: 0;
+    }
+
     .search-form {
         position: static;
         transform: none;
         margin-left: auto;
         margin-right: 0.5rem;
+        flex-shrink: 1;
     }
 
     .search-inp {
-        width: 140px;
-        padding: 0.5rem 0.8rem;
+        width: 120px;
     }
 
     .search-btn {
         font-size: 0;
         padding: 0.5rem 0.7rem;
+        flex-shrink: 0;
     }
 
     .search-btn i {
         font-size: 1rem;
         margin-right: 0;
     }
-
-    .navbar-collapse {
-        background-color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 10px;
-        margin-top: 0.5rem;
-    }
 }
-
-
 </style>
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
     <div class="container-fluid">
