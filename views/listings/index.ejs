@@ -3,14 +3,20 @@
 <style>
     #filters{
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
+        gap: 1.5rem;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 1rem 0;
+    }
+
+    #filters::-webkit-scrollbar{
+        display: none;
     }
 
     .filter{
         text-align: center;
-        margin-right: 2rem;
-        margin-top: 2rem;
+        flex: 0 0 auto;
         opacity: 0.7;
     }
 
@@ -36,6 +42,18 @@
         margin-left: 3rem;
         display: flex;
         align-items: center;
+    }
+
+    @media(max-width: 576px){
+        .tax-toggle{
+            margin-left: 0;
+            font-size: 0.8rem;
+            flex: 0 0 auto;
+        }
+
+        .listing-card img{
+            height: 16rem !important;
+        }
     }
 </style>
     <div id="filters">
@@ -104,8 +122,9 @@
     
     </div>
 
-    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 mt-3">
         <% for(let list of listing) { %>
+            <div class="col">
             <a href="/listings/<%=list._id%>" class="listing-link">
                 <div class="card col listing-card">
                     <img src="<%=list.image.url%>" class="card-img-top" alt="lisitng_images" style="height: 20rem;">
@@ -120,6 +139,7 @@
                     </div>
                 </div>
             </a>
+            </div>
     <% } %>
     </div>
 
