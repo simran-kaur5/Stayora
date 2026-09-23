@@ -43,6 +43,28 @@
         display: flex;
         align-items: center;
     }
+    .ask-ai-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        right: 25px;
+        bottom: 25px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: none;
+        background-color: #fe424d;
+        color: white;
+        font-size: 1.4rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        cursor: pointer;
+        z-index: 1000;
+    }
+
+.ask-ai-btn:hover {
+    transform: scale(1.08);
+}
 
     @media(max-width: 576px){
         .tax-toggle{
@@ -141,6 +163,9 @@
             </a>
             </div>
     <% } %>
+    <a href="/chat" class="ask-ai-btn">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+    </a>
     </div>
 
     <script>

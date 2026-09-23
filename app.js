@@ -25,7 +25,10 @@ const passport = require("passport")
 const LocalStrategy = require("passport-local")
 const User = require("./models/users")
 const multer = require("multer") //to handle file uploaded
+const console = require("console")
 const upload = multer({dest:"upload/"})
+
+const chatRouter = require("./routes/chat.js") //router for reviews
 
 const dbUrl = process.env.ATLASDB_URL
 
@@ -33,6 +36,7 @@ app.use(methodOverride("_method"));
 app.set("view engine","ejs")
 app.set("views",path.join(__dirname,"views"));
 app.use(express.urlencoded({extended:true}))
+app.use(express.json());
 app.engine("ejs",ejsMate)
 app.use(express.static(path.join(__dirname,"/public")))
 
@@ -67,9 +71,7 @@ const sessionOptions = {
     }
 }
 
-app.get("/",(req,res)=>{
-    res.redirect("/listings")
-})
+
 
 app.use(sessions(sessionOptions))
 app.use(flash())
@@ -83,10 +85,14 @@ passport.use(new LocalStrategy(User.authenticate()));
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-    res.locals.currUser = req.user
+    res.locals.currUser = req.user;
 
     next();
 });
+
+app.get("/",(req,res)=>{
+    res.redirect("/listings")
+})
 
 async function main() {
     await mongoose.connect(dbUrl);
@@ -97,6 +103,7 @@ app.use("/listings",listingRouter)
 
 app.use("/listings/:id/reviews",reviewRouter)
 app.use("/",userRouter)
+app.use("/chat",chatRouter)
 
 // if no any route matches
 app.use((req,res,next)=>{

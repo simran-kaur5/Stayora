@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .chat-listing-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 12px 14px;
+    margin: 8px 0;
+
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+}
+
+.chat-listing-info {
+    min-width: 0;
+}
+
+.chat-listing-title {
+    margin: 0 0 5px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.chat-listing-details {
+    display: flex;
+    gap: 12px;
+    font-size: 13px;
+    color: #666;
+}
+
+.chat-listing-btn {
+    flex-shrink: 0;
+
+    padding: 6px 12px;
+    border-radius: 6px;
+
+    background: #222;
+    color: white;
+    text-decoration: none;
+
+    font-size: 13px;
+}
+
+.chat-listing-btn:hover {
+    color: white;
+    opacity: 0.85;
+}
+</style>
+<body>
+        <p><%= message %></p>
+<% listings.forEach(listing => { %>
+<div class="chat-listing-card">
+    <div class="chat-listing-info">
+        <h6 class="chat-listing-title"><%= listing.title %></h6>
+
+        <div class="chat-listing-details">
+            <span>₹<%= listing.price %> / night</span>
+            <span>📍 <%= listing.location %></span>
+        </div>
+    </div>
+
+    <a href="/listings/<%= listing._id %>" class="chat-listing-btn">
+        View
+    </a>
+</div>
+<% }) %>
+</body>
+</html>
+
