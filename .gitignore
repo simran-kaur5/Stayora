@@ -1,2 +1,5 @@
 .env
 node_modules/
+sentiment-service/venv/
+__pycache__/
+*.pyc

@@ -19,6 +19,15 @@ const reviewSchema = new Schema({
     author:{
         type: Schema.Types.ObjectId,
         ref: "User"
+    },
+
+    sentiment: {
+    type: String,
+    enum: ["positive", "negative"]
+    },
+
+    sentimentConfidence: {
+        type: Number
     }
 })
 

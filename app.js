@@ -90,6 +90,7 @@ app.use((req, res, next) => {
     next();
 });
 
+
 app.get("/",(req,res)=>{
     res.redirect("/listings")
 })
@@ -98,12 +99,12 @@ async function main() {
     await mongoose.connect(dbUrl);
 }
 
-
 app.use("/listings",listingRouter)
 
 app.use("/listings/:id/reviews",reviewRouter)
 app.use("/",userRouter)
 app.use("/chat",chatRouter)
+
 
 // if no any route matches
 app.use((req,res,next)=>{
@@ -116,6 +117,7 @@ app.use((err,req,res,next)=>{
     res.status(statusCode).render("listings/errors.ejs",{message})
     // res.status(statusCode).send(message)
 })
+
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT,()=>{

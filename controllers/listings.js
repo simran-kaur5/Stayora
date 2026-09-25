@@ -22,6 +22,9 @@ module.exports.newForm = (req,res)=>{
 
 module.exports.showListings = async (req, res) => {
     let id = req.params.id
+    let sentiment = req.params.sentiment
+    
+    console.log(req.params)
     const list = await Listing.findById(id).populate({path:"reviews",populate:{
         path: "author" // we want author name 
         },
@@ -31,7 +34,23 @@ module.exports.showListings = async (req, res) => {
         req.flash("error","This listing does not exist")
         return res.redirect("/listings")
     }
-    res.render("listings/show.ejs",{list})
+
+    const totalReviews = list.reviews.length;
+
+    if (sentiment === "positive") {
+        list.reviews = list.reviews.filter(
+            review => review.sentiment === "positive"
+        );
+    }
+
+    if (sentiment === "negative") {
+        list.reviews = list.reviews.filter(
+            review => review.sentiment === "negative"
+        );
+    }
+
+
+    res.render("listings/show.ejs", { list ,totalReviews});
 }
 
 module.exports.createListings = async(req,res,next)=>{

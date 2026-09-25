@@ -20,6 +20,10 @@ router
 
 router.get("/new",isLoggedIn,listingController.newForm)
 
+router.get("/:id/:sentiment",
+    isLoggedIn, 
+    wrapAsync(listingController.showListings))
+
 router
     .route("/:id")
     .get(isLoggedIn, wrapAsync(listingController.showListings))

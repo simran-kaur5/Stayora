@@ -3,8 +3,29 @@ const Listing = require("../models/listings.js")
 
 module.exports.createReview = async(req,res)=>{
     let id = req.params.id
-    let newReview= new Review(req.body.review)
+    let newReview= new Review(req.body.review)  
+
+    let reviewText = newReview.comment
     
+    const response = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            review: reviewText
+        })
+    });
+
+    const result = await response.json();
+    console.log()
+    console.log(result)
+    newReview.sentiment = result.sentiment
+    newReview.sentimentConfidence = result.confidence
+
+    console.log(newReview)
+
+    // console.log(result)
     // assign curr user as author of review
     newReview.author = req.user._id
 

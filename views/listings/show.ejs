@@ -129,28 +129,32 @@
         <hr>
 
         <% } %>
-        <% if (list.reviews.length > 0) { %>
-        <div class="row">
-            <p><b>All Reviews</b></p>
-
-            <% for( let review of list.reviews) { %>
-                <div class="card col-5 ms-3 mb-3 review-card">
-                    <div class="card-body">
-                        <h5 class="card-title">@<%= review.author.username %></h5>
-                        <p class="starability-result card-text" data-rating=<%= review.rating %>></p>
-                        <p class="card-text"><%=review.comment%></p>
-                    </div>
-                    <form action="/listings/<%=list._id%>/reviews/<%=review._id%>?_method=DELETE" method = "POST" class="mb-3 mt-3">
-                        <button class="btn btn-sm btn-dark">Delete</button>
-                    </form>
+        <% if (totalReviews > 0) { %>
+            <div class="row">
+                <div class="d-flex gap-2 mb-3">
+                    <a href="/listings/<%= list._id %>" class="btn btn-outline-dark"><b>All Reviews</b></a> 
+                    <a href="/listings/<%= list._id %>/positive" class="btn btn-outline-success"><b>Postive Reviews</b></a>
+                    <a href="/listings/<%= list._id %>/negative" class="btn btn-outline-danger"><b>Negative Reviews</b></a>
                 </div>
-                <% } %>
             
-            </div>
-            <% } %>
+                <% for( let review of list.reviews) { %>
+                    <div class="card col-5 ms-3 mb-3 review-card">
+                        <div class="card-body">
+                            <h5 class="card-title">@<%= review.author.username %></h5>
+                            <p class="starability-result card-text" data-rating=<%= review.rating %>></p>
+                            <p class="card-text"><%=review.comment%></p>
+                        </div>
+                        <form action="/listings/<%=list._id%>/reviews/<%=review._id%>?_method=DELETE" method = "POST" class="mb-3 mt-3">
+                            <button class="btn btn-sm btn-dark">Delete</button>
+                        </form>
+                    </div>
+                <% } %>
+                
+                </div>
+        <% } %>
 
     </div>
-    <div class="col-12 col-md-8 offset-md-2 mb-3">
+    <div class="col-12 col-md-8 offset-md-3 mb-3">
                 <h3>Where you'll be</h3>
                 <div id="map"></div>
             </div>    
