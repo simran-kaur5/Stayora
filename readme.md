@@ -1,6 +1,6 @@
 # Stayora
 
-Stayora is a full-stack web application for exploring and managing property listings. It allows users to browse stays, create their own listings, upload images, view locations on a map, leave reviews, and use an AI-assisted search feature to find suitable listings using natural language.
+Stayora is a full-stack web application for exploring and managing property listings. It allows users to browse stays, create their own listings, upload images, view locations on a map, leave reviews, and use AI-assisted features for natural language listing search and review sentiment analysis.
 
 ## Live Demo
 
@@ -18,6 +18,10 @@ Stayora is a full-stack web application for exploring and managing property list
 * Search listings
 * AI-assisted natural language listing search
 * AI-based extraction of search preferences such as location, category, and price
+* AI-based review sentiment analysis
+* Automatic classification of reviews as positive or negative
+* Sentiment confidence storage for reviews
+* Filter reviews by sentiment
 * View listing details
 * Interactive Mapbox maps
 * Add and delete reviews
@@ -61,6 +65,10 @@ Stayora is a full-stack web application for exploring and managing property list
 * Natural language search
 * Intent detection
 * Structured JSON responses
+* DistilBERT
+* Hugging Face Transformers
+* PyTorch
+* Review sentiment classification
 
 ### Other
 
@@ -114,6 +122,58 @@ Matching Listings
 Listings Displayed in Chat
 ```
 
+## AI Review Sentiment Analysis
+
+Stayora also uses a fine-tuned DistilBERT model to automatically analyze the sentiment of user reviews.
+
+When a user submits a review, the review text is sent from the Node.js backend to a separate FastAPI sentiment analysis service.
+
+The model classifies the review as either:
+
+* Positive
+* Negative
+
+The predicted sentiment and confidence score are then stored along with the review in MongoDB.
+
+### Sentiment Analysis Flow
+
+```text
+User Submits Review
+        ↓
+Node.js / Express
+        ↓
+FastAPI Sentiment Service
+        ↓
+Fine-tuned DistilBERT
+        ↓
+Sentiment + Confidence
+        ↓
+MongoDB
+        ↓
+Review Display / Sentiment Filtering
+```
+
+### Sentiment Service
+
+The sentiment model is deployed as a separate FastAPI service on Render.
+
+```text
+Stayora Node.js Application
+        ↓
+POST /predict
+        ↓
+FastAPI
+        ↓
+DistilBERT Model
+        ↓
+{
+    "sentiment": "positive",
+    "confidence": 0.9984
+}
+```
+
+The sentiment service is kept separate from the main Node.js application so that the Python-based machine learning model can run independently.
+
 ## Project Structure
 
 ```text
@@ -142,6 +202,11 @@ Stayora/
 │
 ├── utils/
 │   └── ExpressError.js
+│
+├── sentiment-service/
+│   ├── app.py
+│   ├── requirements.txt
+│   └── stayora-sentiment-model/
 │
 ├── app.js
 ├── schema.js
@@ -197,19 +262,47 @@ The application will run locally on:
 http://localhost:8080
 ```
 
+### Run the Sentiment Service Locally
+
+Navigate to the sentiment service:
+
+```bash
+cd sentiment-service
+```
+
+Install the Python dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Start the FastAPI server:
+
+```bash
+uvicorn app:app --host 0.0.0.0 --port 8000
+```
+
+The sentiment API will be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
 ## Main Routes
 
-| Route                   | Description                |
-| ----------------------- | -------------------------- |
-| `/listings`             | View all listings          |
-| `/listings/new`         | Create a listing           |
-| `/listings/:id`         | View listing details       |
-| `/listings/:id/edit`    | Edit a listing             |
-| `/listings/:id/reviews` | Add a review               |
-| `/signup`               | Create an account          |
-| `/login`                | Login                      |
-| `/logout`               | Logout                     |
-| `/chat`                 | AI-assisted listing search |
+| Route                    | Description                |
+| ------------------------ | -------------------------- |
+| `/listings`              | View all listings          |
+| `/listings/new`          | Create a listing           |
+| `/listings/:id`          | View listing details       |
+| `/listings/:id/edit`     | Edit a listing             |
+| `/listings/:id/reviews`  | Add a review               |
+| `/listings/:id/positive` | View positive reviews      |
+| `/listings/:id/negative` | View negative reviews      |
+| `/signup`                | Create an account          |
+| `/login`                 | Login                      |
+| `/logout`                | Logout                     |
+| `/chat`                  | AI-assisted listing search |
 
 ## What I Worked With
 
@@ -231,7 +324,14 @@ While building Stayora, I worked with:
 * AI-based intent detection
 * Structured JSON responses from AI
 * Dynamic MongoDB filtering using extracted search parameters
-* Deployment with Render
+* Fine-tuning a DistilBERT sentiment classifier
+* Hugging Face Transformers
+* PyTorch
+* FastAPI model serving
+* AI-based review sentiment classification
+* Sentiment confidence scoring
+* Deploying separate Node.js and Python services with Render
+* Git LFS for storing the trained ML model
 
 ## Future Improvements
 
@@ -244,13 +344,14 @@ While building Stayora, I worked with:
 * Notifications
 * Improved search and filtering
 * More advanced AI-assisted recommendations
+* Review sentiment analytics and insights
+* Personalized listing recommendations
 
 ## Author
 
 **Simranjit Kaur**
 
 B.Tech Computer Science & Engineering
-
 Guru Nanak Dev Engineering College, Ludhiana
 
 GitHub: `simran-kaur5`
