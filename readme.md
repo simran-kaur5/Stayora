@@ -178,7 +178,12 @@ The sentiment service is kept separate from the main Node.js application so that
 
 ```text
 Stayora/
-
+│
+├── controllers/
+│   ├── listing.js
+│   ├── review.js
+│   ├── user.js
+│   └── chat.js
 │
 ├── models/
 │   ├── listings.js
@@ -201,7 +206,8 @@ Stayora/
 │   └── js/
 │
 ├── utils/
-│   └── ExpressError.js
+│   ├── ExpressError.js
+│   └── wrapAsync.js
 │
 ├── sentiment-service/
 │   ├── app.py
@@ -211,9 +217,11 @@ Stayora/
 ├── app.js
 ├── schema.js
 ├── middleware.js
+├── cloudConfig.js
 ├── package.json
 └── .gitignore
 ```
+
 
 ## Getting Started
 
