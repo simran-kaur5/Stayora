@@ -1,6 +1,6 @@
 # Stayora
 
-Stayora is a full-stack web application for exploring and managing property listings. It allows users to browse stays, create their own listings, upload images, view locations on a map, leave reviews, and use AI-assisted features for natural language listing search and review sentiment analysis.
+Stayora is a full-stack property listing platform with AI-powered natural language search and a custom fine-tuned DistilBERT model for review sentiment analysis. It allows users to browse stays, create and manage their own listings, upload images, view property locations on interactive maps, leave reviews, and receive AI-powered insights from review content.
 
 ## Live Demo
 
@@ -213,6 +213,9 @@ Stayora/
 │   ├── app.py
 │   ├── requirements.txt
 │   └── stayora-sentiment-model/
+│
+├── notebooks/
+│   └── sentiment_model_training.ipynb
 │
 ├── app.js
 ├── schema.js
