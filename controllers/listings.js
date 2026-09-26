@@ -24,7 +24,6 @@ module.exports.showListings = async (req, res) => {
     let id = req.params.id
     let sentiment = req.params.sentiment
     
-    console.log(req.params)
     const list = await Listing.findById(id).populate({path:"reviews",populate:{
         path: "author" // we want author name 
         },

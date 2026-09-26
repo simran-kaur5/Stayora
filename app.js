@@ -25,7 +25,6 @@ const passport = require("passport")
 const LocalStrategy = require("passport-local")
 const User = require("./models/users")
 const multer = require("multer") //to handle file uploaded
-const console = require("console")
 const upload = multer({dest:"upload/"})
 
 const chatRouter = require("./routes/chat.js") //router for reviews

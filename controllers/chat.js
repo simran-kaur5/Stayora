@@ -14,7 +14,6 @@ module.exports.startChat = async(req,res)=>{
 
         const { message } = req.body;
 
-        console.log("User:", message);
 
         const completion = await groq.chat.completions.create({
             model: "openai/gpt-oss-20b",
@@ -85,7 +84,6 @@ module.exports.startChat = async(req,res)=>{
             ]
         });
         const Groqreply = completion.choices[0].message.content;
-        console.log(Groqreply)
         
         const data = JSON.parse(Groqreply);
 

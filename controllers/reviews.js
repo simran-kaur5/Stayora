@@ -2,41 +2,55 @@ const Review = require("../models/reviews.js")
 const Listing = require("../models/listings.js")
 
 module.exports.createReview = async(req,res)=>{
-    let id = req.params.id
-    let newReview= new Review(req.body.review)  
+    let id = req.params.id;
 
-    let reviewText = newReview.comment
+    let newReview = new Review(req.body.review);
+
+    newReview.author = req.user._id;
+
+    const list = await Listing.findById(id);
+
+    list.reviews.push(newReview);
+
+    // Save review immediately
+    await newReview.save();
+    await list.save();
     
-    const response = await fetch("https://stayora-sentiments.onrender.com/predict", {
+    fetch("https://stayora-sentiments.onrender.com/predict", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            review: reviewText
+            review: newReview.comment
         })
+    })
+    .then(async response => {
+        const result = await response.json();
+
+        // Update the SAME review in DB
+        const updatedReview = await Review.findByIdAndUpdate(
+        newReview._id,
+        {
+            sentiment: result.sentiment,
+            sentimentConfidence: result.confidence
+        },
+        { returnDocument: "after" }
+        );
+
+        if (!updatedReview) {
+            console.log("Review was deleted before sentiment analysis finished.");
+        }
+    })
+    .catch(err => {
+        console.log("Sentiment error:", err);
     });
 
-    const result = await response.json();
-    console.log()
-    console.log(result)
-    newReview.sentiment = result.sentiment
-    newReview.sentimentConfidence = result.confidence
 
-    console.log(newReview)
-
-    // console.log(result)
-    // assign curr user as author of review
-    newReview.author = req.user._id
-
-    const list = await Listing.findById(id)
-    list.reviews.push(newReview)
-
-    await newReview.save()
-    await list.save()
-    req.flash("success","Review Saved")
+    req.flash("success", "Review Saved! Sentiment is being analyzed.")
     res.redirect(`/listings/${id}`)
 }
+
 
 module.exports.destroyReview = async(req,res)=>{
     let {id, reviewId} = req.params
