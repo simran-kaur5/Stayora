@@ -75,7 +75,6 @@ module.exports.createListings = async(req,res,next)=>{
 module.exports.renderEditForm = async (req,res)=>{
     let id = req.params.id
     let list = await Listing.findById(id)
-    console.log("Hi")
 
     if(!list){
         req.flash("error","This listing does not exist")
