@@ -20,10 +20,11 @@ router
 
 router.get("/new",isLoggedIn,listingController.newForm)
 
-router.get("/:id/edit", (req, res, next) => {
-    console.log("EDIT ROUTE MATCHED");
-    next();
-}, isLoggedIn, isOwner, wrapAsync(listingController.renderEditForm));
+router.get("/:id/edit",
+    isLoggedIn,
+    isOwner,
+    wrapAsync(listingController.renderEditForm)
+);
 
 router.get("/:id/:sentiment",
     isLoggedIn, 
