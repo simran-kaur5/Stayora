@@ -20,6 +20,11 @@ router
 
 router.get("/new",isLoggedIn,listingController.newForm)
 
+router.get("/:id/edit", (req, res, next) => {
+    console.log("EDIT ROUTE MATCHED");
+    next();
+}, isLoggedIn, isOwner, wrapAsync(listingController.renderEditForm));
+
 router.get("/:id/:sentiment",
     isLoggedIn, 
     wrapAsync(listingController.showListings))
@@ -33,10 +38,6 @@ router
     upload.single("image"),
     wrapAsync(listingController.updateListings))
     .delete(isLoggedIn,isOwner,wrapAsync(listingController.destroyListings))
-
-
-router.get("/:id/edit",
-    isLoggedIn,isOwner,wrapAsync(listingController.renderEditForm))
 
 
 module.exports = router

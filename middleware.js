@@ -33,7 +33,7 @@ module.exports.isLoggedIn = (req,res,next)=>{
         req.flash("error","Please Login")
         return res.redirect("/login")
     }
-
+    console.log("Authenticated:", req.isAuthenticated());
     next()
 }
 
@@ -45,6 +45,7 @@ module.exports.saveredirectUrls = (req,res,next)=>{
 }
 
 module.exports.isOwner = async(req,res,next)=>{
+    console.log("isOwner middleware reached");
     let id = req.params.id;
     let listings = await Listing.findById(id)
 
