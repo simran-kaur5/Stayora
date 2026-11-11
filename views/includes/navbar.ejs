@@ -1,6 +1,6 @@
 
 <style> 
-  .container-fluid {
+.navbar > .container-fluid {
     position: relative;
     flex-wrap: nowrap !important;
 }
@@ -136,11 +136,17 @@
         </div>
 
         <!-- Search -->
-        <form class="d-flex search-form" role="search">
+        <form class="d-flex search-form" role="search" action="/listings" method="GET">
             <input
                 class="form-control search-inp"
                 type="search"
-                placeholder="Search destination">
+                placeholder="Search destination"
+                name="q"
+                value="<%= typeof searchQuery !== "undefined" ? searchQuery: ""%>"
+                >
+                <% if (typeof category !== 'undefined' && category) { %>
+                    <input type="hidden" name="category" value="<%= category %>">
+                <% } %>
 
             <button class="btn search-btn" type="submit">
                 <i class="fa-solid fa-magnifying-glass"></i>
